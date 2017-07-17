@@ -137,6 +137,30 @@ namespace SimpleWeb {
   };
 }
 
+#ifdef __SSE2__
+#if defined(_MSC_VER)
+#if _MSC_VER >= 1800
+#include <intrin.h>
+namespace SimpleWeb {
+  inline void pause() { _mm_pause(); }
+} // namespace SimpleWeb
+#else
+namespace SimpleWeb {
+  inline void pause() {}
+} // namespace SimpleWeb
+#endif
+#else
+#include <x86intrin.h>
+namespace SimpleWeb {
+  inline void pause() { _mm_pause(); }
+} // namespace SimpleWeb
+#endif
+#else
+namespace SimpleWeb {
+  inline void pause() {}
+} // namespace SimpleWeb
+#endif
+
 #ifdef PTHREAD_RWLOCK_INITIALIZER
 namespace SimpleWeb {
   /// Read-preferring R/W lock.
